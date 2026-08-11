@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tax Prep</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    .drop-zone { transition: all 0.2s; }
+    .drop-zone.over { border-color: #3b82f6 !important; background: #eff6ff; }
+    .editable-cell { cursor: pointer; }
+    .editable-cell:hover { background: #f0f9ff; }
+    .spinner { border: 2px solid #e5e7eb; border-top-color: #3b82f6; border-radius: 50%; width: 18px; height: 18px; animation: spin 0.7s linear infinite; display: inline-block; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    #tx-table tbody tr:hover { background: #f9fafb; }
+    .badge { display: inline-flex; align-items: center; padding: 2px 8px; border-radius: 9999px; font-size: 11px; font-weight: 600; }
+    .badge-bank { background: #dbeafe; color: #1e40af; }
+    .badge-visa { background: #fce7f3; color: #9d174d; }
+    .badge-loc  { background: #d1fae5; color: #065f46; }
+    .section { display: none; }
+    .section.active { display: block; }
+    nav button.active { background: #1e40af; color: white; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+<!-- ── LOGIN ─────────────────────────────────────────────────────────────── -->
+<div id="login-screen" class="min-h-screen flex items-center justify-center">
+  <div class="bg-white rounded-2xl shadow-lg p-10 w-full max-w-md">
+    <div class="text-center mb-8">
+      <div class="text-4xl mb-3">🧾</div>
+      <h1 class="text-2xl font-bold text-gray-900">Tax Prep</h1>
+      <p class="text-gray-500 mt-1 text-sm">Sign in to load or start your tax session</p>
+    </div>
+    <form id="login-form" class="space-y-4">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+        <input id="login-name" type="text" required placeholder="Graham Powell"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <input id="login-email" type="email" required placeholder="you@example.com"
+          class="w-full border border-gray-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+      <button type="submit"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors">
+        Continue →
+      </button>
+      <p id="login-err" class="text-red-500 text-xs text-center hidden"></p>
+    </form>
+  </div>
+</div>
+
+<!-- ── MAIN APP ───────────────────────────────────────────────────────────── -->
+<div id="app" class="hidden min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 px-6 py-3 flex items-center justify-between sticky top-0 z-10 shadow-sm">
+    <div class="flex items-center gap-2">
+      <span class="text-xl">🧾</span>
+      <span class="font-bold text-gray-900 text-lg">Tax Prep</span>
+    </div>
+    <div class="flex items-center gap-4">
+      <span id="user-label" class="text-sm text-gray-500"></span>
+      <button id="export-btn"
+        class="bg-green-600 hover:bg-green-700 text-white text-sm font-semibold px-4 py-1.5 rounded-lg transition-colors flex items-center gap-1.5">
+        ↓ Export Excel
+      </button>
+      <button id="logout-btn" class="text-sm text-gray-400 hover:text-gray-700 transition-colors">Sign out</button>
+    </div>
+  </header>
+
+  <!-- Nav -->
+  <nav class="bg-white border-b border-gray-100 px-6 flex gap-1 py-2">
+    <button data-section="upload"  class="nav-btn active px-4 py-1.5 rounded-lg text-sm font-medium transition-colors">Upload</button>
+    <button data-section="transactions" class="nav-btn px-4 py-1.5 rounded-lg text-sm font-medium transition-colors">Transactions</button>
+    <button data-section="summary" class="nav-btn px-4 py-1.5 rounded-lg text-sm font-medium transition-colors">Summary</button>
+  </nav>
+
+  <main class="flex-1 p-6 max-w-7xl mx-auto w-full">
+
+    <!-- UPLOAD SECTION -->
+    <section id="section-upload" class="section active">
+      <h2 class="text-lg font-semibold text-gray-800 mb-4">Upload Bank Statements</h2>
+      <p class="text-sm text-gray-500 mb-6">Drop CSV exports from each account type. Files are auto-categorized and deduplicated.</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <!-- BANK zone -->
+        <div class="bg-white rounded-xl border-2 border-dashed border-gray-300 p-6 text-center drop-zone" data-source="BANK">
+          <div class="text-2xl mb-2">🏦</div>
+          <div class="font-semibold text-gray-700 mb-1">Bank</div>
+          <p class="text-xs text-gray-400 mb-3">Chequing / savings CSVs</p>
+          <input type="file" accept=".csv" multiple class="file-input hidden" data-source="BANK" />
+          <button class="upload-trigger text-blue-600 text-sm font-medium hover:underline" data-source="BANK">Choose files</button>
+          <div class="file-list mt-3 text-xs text-left text-gray-500 space-y-1"></div>
+          <div class="upload-status mt-2 text-xs font-medium hidden"></div>
+        </div>
+
+        <!-- VISA zone -->
+        <div class="bg-white rounded-xl border-2 border-dashed border-gray-300 p-6 text-center drop-zone" data-source="VISA">
+          <div class="text-2xl mb-2">💳</div>
+          <div class="font-semibold text-gray-700 mb-1">Visa / Credit</div>
+          <p class="text-xs text-gray-400 mb-3">Credit card CSVs</p>
+          <input type="file" accept=".csv" multiple class="file-input hidden" data-source="VISA" />
+          <button class="upload-trigger text-blue-600 text-sm font-medium hover:underline" data-source="VISA">Choose files</button>
+          <div class="file-list mt-3 text-xs text-left text-gray-500 space-y-1"></div>
+          <div class="upload-status mt-2 text-xs font-medium hidden"></div>
+        </div>
+
+        <!-- LOC zone -->
+        <div class="bg-white rounded-xl border-2 border-dashed border-gray-300 p-6 text-center drop-zone" data-source="LOC">
+          <div class="text-2xl mb-2">📄</div>
+          <div class="font-semibold text-gray-700 mb-1">Line of Credit</div>
+          <p class="text-xs text-gray-400 mb-3">LOC statement CSVs</p>
+          <input type="file" accept=".csv" multiple class="file-input hidden" data-source="LOC" />
+          <button class="upload-trigger text-blue-600 text-sm font-medium hover:underline" data-source="LOC">Choose files</button>
+          <div class="file-list mt-3 text-xs text-left text-gray-500 space-y-1"></div>
+          <div class="upload-status mt-2 text-xs font-medium hidden"></div>
+        </div>
+      </div>
+
+      <div id="upload-summary" class="hidden bg-blue-50 border border-blue-200 rounded-xl p-4 text-sm text-blue-800">
+        <span id="upload-summary-text"></span>
+        <button id="go-to-transactions" class="ml-4 font-semibold underline hover:no-underline">View transactions →</button>
+      </div>
+    </section>
+
+    <!-- TRANSACTIONS SECTION -->
+    <section id="section-transactions" class="section">
+      <div class="flex items-center gap-3 mb-4">
+        <h2 class="text-lg font-semibold text-gray-800">Transactions</h2>
+        <span id="tx-count" class="text-sm text-gray-400"></span>
+        <div class="flex-1"></div>
+        <!-- Filters -->
+        <input id="tx-search" type="text" placeholder="Search description…"
+          class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm w-52 focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        <select id="tx-cat-filter"
+          class="border border-gray-300 rounded-lg px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option value="all">All categories</option>
+          <option value="Uncategorized">⚠ Uncategorized</option>
+        </select>
+        <button id="refresh-btn" class="text-gray-400 hover:text-gray-700 text-sm" title="Refresh">↻</button>
+      </div>
+
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table id="tx-table" class="w-full text-sm">
+            <thead class="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Date</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Description</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Source</th>
+                <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Out</th>
+                <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">In</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Category <span class="font-normal normal-case">(click to edit)</span></th>
+              </tr>
+            </thead>
+            <tbody id="tx-body" class="divide-y divide-gray-100"></tbody>
+          </table>
+        </div>
+        <div id="tx-empty" class="hidden text-center py-16 text-gray-400 text-sm">
+          No transactions yet — upload some CSVs to get started.
+        </div>
+        <div id="tx-loading" class="hidden text-center py-10">
+          <div class="spinner mx-auto"></div>
+          <p class="text-xs text-gray-400 mt-2">Loading…</p>
+        </div>
+      </div>
+
+      <!-- datalist for category autocomplete -->
+      <datalist id="category-datalist"></datalist>
+    </section>
+
+    <!-- SUMMARY SECTION -->
+    <section id="section-summary" class="section">
+      <div class="flex items-center gap-3 mb-4">
+        <h2 class="text-lg font-semibold text-gray-800">Summary by Category</h2>
+        <button id="summary-refresh" class="text-gray-400 hover:text-gray-700 text-sm" title="Refresh">↻</button>
+      </div>
+      <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 border-b border-gray-200">
+            <tr>
+              <th class="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Category</th>
+              <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide"># Transactions</th>
+              <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Total Out</th>
+              <th class="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Total In</th>
+            </tr>
+          </thead>
+          <tbody id="summary-body" class="divide-y divide-gray-100"></tbody>
+        </table>
+        <div id="summary-empty" class="hidden text-center py-16 text-gray-400 text-sm">No data yet.</div>
+        <div id="summary-loading" class="hidden text-center py-10">
+          <div class="spinner mx-auto"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// ── state ────────────────────────────────────────────────────────────────────
+let SESSION_ID = null;
+let categoryList = [];
+let txDebounce = null;
+
+const $ = id => document.getElementById(id);
+
+// ── login ────────────────────────────────────────────────────────────────────
+$('login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const name  = $('login-name').value.trim();
+  const email = $('login-email').value.trim();
+  if (!name || !email) return;
+
+  const btn = e.target.querySelector('button[type=submit]');
+  btn.disabled = true;
+  btn.textContent = 'Signing in…';
+  $('login-err').classList.add('hidden');
+
+  try {
+    const fd = new FormData();
+    fd.append('name', name);
+    fd.append('email', email);
+    const res = await fetch('/api/login', { method: 'POST', body: fd });
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    SESSION_ID = data.session_id;
+    localStorage.setItem('tax_sid', SESSION_ID);
+    localStorage.setItem('tax_name', data.name);
+    localStorage.setItem('tax_email', data.email);
+    initApp(data);
+  } catch (err) {
+    $('login-err').textContent = err.message || 'Login failed';
+    $('login-err').classList.remove('hidden');
+    btn.disabled = false;
+    btn.textContent = 'Continue →';
+  }
+});
+
+function initApp(data) {
+  $('login-screen').classList.add('hidden');
+  $('app').classList.remove('hidden');
+  $('user-label').textContent = `${data.name} · ${data.email}`;
+  if (data.transaction_count > 0) {
+    showUploadSummary(data.transaction_count, 0);
+  }
+  loadCategoryList();
+}
+
+$('logout-btn').addEventListener('click', () => {
+  SESSION_ID = null;
+  localStorage.removeItem('tax_sid');
+  localStorage.removeItem('tax_name');
+  localStorage.removeItem('tax_email');
+  $('app').classList.add('hidden');
+  $('login-screen').classList.remove('hidden');
+  $('login-form').reset();
+});
+
+// Auto-resume if localStorage has a session
+window.addEventListener('DOMContentLoaded', async () => {
+  const sid  = localStorage.getItem('tax_sid');
+  const name = localStorage.getItem('tax_name');
+  const email = localStorage.getItem('tax_email');
+  if (sid && name && email) {
+    // Try to resume
+    const fd = new FormData();
+    fd.append('name', name);
+    fd.append('email', email);
+    try {
+      const res = await fetch('/api/login', { method: 'POST', body: fd });
+      if (res.ok) {
+        const data = await res.json();
+        SESSION_ID = data.session_id;
+        initApp(data);
+        return;
+      }
+    } catch (_) {}
+  }
+});
+
+// ── nav ───────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active', 'bg-blue-800', 'text-white'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    btn.classList.add('active');
+    const sec = btn.dataset.section;
+    $(`section-${sec}`).classList.add('active');
+    if (sec === 'transactions') loadTransactions();
+    if (sec === 'summary') loadSummary();
+  });
+});
+
+// nav active styles
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('mouseenter', () => { if (!btn.classList.contains('active')) btn.classList.add('text-gray-700'); });
+  btn.addEventListener('mouseleave', () => { if (!btn.classList.contains('active')) btn.classList.remove('text-gray-700'); });
+});
+
+function setActiveNav(section) {
+  document.querySelectorAll('.nav-btn').forEach(b => {
+    b.classList.remove('bg-blue-700', 'text-white');
+    b.classList.add('text-gray-600');
+  });
+  const btn = document.querySelector(`[data-section="${section}"]`);
+  if (btn) { btn.classList.add('bg-blue-700', 'text-white'); btn.classList.remove('text-gray-600'); }
+}
+
+// ── upload ────────────────────────────────────────────────────────────────────
+document.querySelectorAll('.drop-zone').forEach(zone => {
+  const source = zone.dataset.source;
+  const input  = zone.querySelector('.file-input');
+  const trigger = zone.querySelector('.upload-trigger');
+  const fileList = zone.querySelector('.file-list');
+  const status  = zone.querySelector('.upload-status');
+
+  trigger.addEventListener('click', () => input.click());
+
+  input.addEventListener('change', () => {
+    if (input.files.length) handleUpload(source, input.files, fileList, status);
+  });
+
+  zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('over'); });
+  zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+  zone.addEventListener('drop', e => {
+    e.preventDefault();
+    zone.classList.remove('over');
+    const files = [...e.dataTransfer.files].filter(f => f.name.endsWith('.csv'));
+    if (files.length) handleUpload(source, files, fileList, status);
+  });
+});
+
+async function handleUpload(source, files, fileList, status) {
+  if (!SESSION_ID) return;
+
+  status.textContent = 'Uploading…';
+  status.className = 'upload-status mt-2 text-xs font-medium text-blue-600';
+  status.classList.remove('hidden');
+  fileList.innerHTML = [...files].map(f => `<div>📄 ${f.name}</div>`).join('');
+
+  const fd = new FormData();
+  fd.append('source', source);
+  [...files].forEach(f => fd.append('files', f));
+
+  try {
+    const res = await fetch(`/api/session/${SESSION_ID}/upload`, { method: 'POST', body: fd });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Upload failed');
+    status.textContent = `✓ ${data.added} rows added${data.duplicates_removed > 0 ? `, ${data.duplicates_removed} dupes removed` : ''}`;
+    status.className = 'upload-status mt-2 text-xs font-medium text-green-600';
+    showUploadSummary(data.total, data.duplicates_removed);
+    loadCategoryList();
+  } catch (err) {
+    status.textContent = '✗ ' + err.message;
+    status.className = 'upload-status mt-2 text-xs font-medium text-red-500';
+  }
+}
+
+function showUploadSummary(total, dupes) {
+  $('upload-summary').classList.remove('hidden');
+  $('upload-summary-text').textContent = `${total.toLocaleString()} transactions loaded${dupes > 0 ? ` (${dupes} duplicates removed)` : ''}.`;
+}
+
+$('go-to-transactions').addEventListener('click', () => {
+  document.querySelector('[data-section="transactions"]').click();
+});
+
+// ── transactions ──────────────────────────────────────────────────────────────
+async function loadTransactions() {
+  if (!SESSION_ID) return;
+  $('tx-body').innerHTML = '';
+  $('tx-empty').classList.add('hidden');
+  $('tx-loading').classList.remove('hidden');
+
+  const search = $('tx-search').value.trim();
+  const cat    = $('tx-cat-filter').value;
+  const params = new URLSearchParams();
+  if (search) params.set('search', search);
+  if (cat !== 'all') params.set('category', cat);
+
+  try {
+    const res = await fetch(`/api/session/${SESSION_ID}/transactions?${params}`);
+    const txs = await res.json();
+    $('tx-loading').classList.add('hidden');
+
+    if (txs.length === 0) {
+      $('tx-empty').classList.remove('hidden');
+      $('tx-count').textContent = '';
+      return;
+    }
+
+    $('tx-count').textContent = `${txs.length.toLocaleString()} rows`;
+    $('tx-body').innerHTML = txs.map(tx => renderTxRow(tx)).join('');
+
+    // Update filter dropdown with known categories
+    updateCategoryFilter();
+  } catch (err) {
+    $('tx-loading').classList.add('hidden');
+    $('tx-body').innerHTML = `<tr><td colspan="6" class="text-center py-6 text-red-400 text-sm">${err.message}</td></tr>`;
+  }
+}
+
+function renderTxRow(tx) {
+  const badgeClass = tx.source === 'BANK' ? 'badge-bank' : tx.source === 'VISA' ? 'badge-visa' : 'badge-loc';
+  const uncatStyle = tx.category === 'Uncategorized' ? 'text-orange-500 font-medium' : 'text-gray-700';
+  return `
+    <tr class="hover:bg-gray-50" data-id="${tx.id}">
+      <td class="px-4 py-2.5 text-gray-500 whitespace-nowrap">${tx.date}</td>
+      <td class="px-4 py-2.5 text-gray-800 max-w-xs truncate" title="${esc(tx.description)}">${esc(tx.description)}</td>
+      <td class="px-4 py-2.5"><span class="badge ${badgeClass}">${tx.source}</span></td>
+      <td class="px-4 py-2.5 text-right text-red-600">${tx.out > 0 ? '$' + tx.out.toFixed(2) : ''}</td>
+      <td class="px-4 py-2.5 text-right text-green-600">${tx.in_amount > 0 ? '$' + tx.in_amount.toFixed(2) : ''}</td>
+      <td class="px-4 py-2.5 editable-cell" onclick="startEditCategory(this, '${tx.id}', '${esc(tx.category)}')">
+        <span class="${uncatStyle}">${esc(tx.category)}</span>
+        <span class="text-gray-300 text-xs ml-1">✎</span>
+      </td>
+    </tr>`;
+}
+
+function esc(str) {
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function startEditCategory(cell, txId, currentCat) {
+  cell.innerHTML = `
+    <input type="text" value="${esc(currentCat)}" list="category-datalist"
+      class="border border-blue-400 rounded px-2 py-1 text-sm w-48 focus:outline-none focus:ring-2 focus:ring-blue-400"
+      onblur="saveCategory(this, '${txId}')"
+      onkeydown="if(event.key==='Enter'){this.blur()}if(event.key==='Escape'){loadTransactions()}" />`;
+  const inp = cell.querySelector('input');
+  inp.focus();
+  inp.select();
+}
+
+async function saveCategory(input, txId) {
+  const newCat = input.value.trim();
+  if (!newCat) { loadTransactions(); return; }
+  try {
+    const res = await fetch(`/api/session/${SESSION_ID}/transactions/${txId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ category: newCat }),
+    });
+    if (!res.ok) throw new Error('Save failed');
+    const tx = await res.json();
+    // Update just this row
+    const row = document.querySelector(`tr[data-id="${txId}"]`);
+    if (row) {
+      const cell = row.querySelector('.editable-cell');
+      const uncatStyle = newCat === 'Uncategorized' ? 'text-orange-500 font-medium' : 'text-gray-700';
+      cell.innerHTML = `<span class="${uncatStyle}">${esc(newCat)}</span><span class="text-gray-300 text-xs ml-1">✎</span>`;
+    }
+    // Refresh category list
+    loadCategoryList();
+  } catch (_) {
+    loadTransactions();
+  }
+}
+
+// Debounced search
+$('tx-search').addEventListener('input', () => {
+  clearTimeout(txDebounce);
+  txDebounce = setTimeout(loadTransactions, 300);
+});
+$('tx-cat-filter').addEventListener('change', loadTransactions);
+$('refresh-btn').addEventListener('click', loadTransactions);
+
+// ── category list ─────────────────────────────────────────────────────────────
+async function loadCategoryList() {
+  if (!SESSION_ID) return;
+  try {
+    const res = await fetch(`/api/session/${SESSION_ID}/category-list`);
+    categoryList = await res.json();
+    $('category-datalist').innerHTML = categoryList.map(c => `<option value="${esc(c)}">`).join('');
+    updateCategoryFilter();
+  } catch (_) {}
+}
+
+function updateCategoryFilter() {
+  const sel = $('tx-cat-filter');
+  const cur = sel.value;
+  sel.innerHTML = `<option value="all">All categories</option><option value="Uncategorized">⚠ Uncategorized</option>`;
+  categoryList.forEach(c => {
+    if (c !== 'Uncategorized') sel.innerHTML += `<option value="${esc(c)}">${esc(c)}</option>`;
+  });
+  if ([...sel.options].some(o => o.value === cur)) sel.value = cur;
+}
+
+// ── summary ───────────────────────────────────────────────────────────────────
+async function loadSummary() {
+  if (!SESSION_ID) return;
+  $('summary-body').innerHTML = '';
+  $('summary-empty').classList.add('hidden');
+  $('summary-loading').classList.remove('hidden');
+
+  try {
+    const res = await fetch(`/api/session/${SESSION_ID}/summary`);
+    const rows = await res.json();
+    $('summary-loading').classList.add('hidden');
+
+    if (rows.length === 0) { $('summary-empty').classList.remove('hidden'); return; }
+
+    $('summary-body').innerHTML = rows.map((r, i) => {
+      const isTotal = r.category === 'TOTAL';
+      const rowClass = isTotal ? 'bg-gray-50 font-semibold border-t-2 border-gray-300' : 'hover:bg-gray-50';
+      return `<tr class="${rowClass}">
+        <td class="px-4 py-2.5 ${isTotal ? 'text-gray-900' : 'text-gray-700'}">${esc(r.category)}</td>
+        <td class="px-4 py-2.5 text-right text-gray-500">${r.count.toLocaleString()}</td>
+        <td class="px-4 py-2.5 text-right text-red-600">${r.out > 0 ? '$' + r.out.toFixed(2) : '—'}</td>
+        <td class="px-4 py-2.5 text-right text-green-600">${r.in_amount > 0 ? '$' + r.in_amount.toFixed(2) : '—'}</td>
+      </tr>`;
+    }).join('');
+  } catch (err) {
+    $('summary-loading').classList.add('hidden');
+    $('summary-empty').textContent = 'Error loading summary.';
+    $('summary-empty').classList.remove('hidden');
+  }
+}
+
+$('summary-refresh').addEventListener('click', loadSummary);
+
+// ── export ────────────────────────────────────────────────────────────────────
+$('export-btn').addEventListener('click', async () => {
+  if (!SESSION_ID) return;
+  const btn = $('export-btn');
+  btn.textContent = 'Preparing…';
+  btn.disabled = true;
+  try {
+    const res = await fetch(`/api/session/${SESSION_ID}/export`);
+    if (!res.ok) { const d = await res.json(); throw new Error(d.detail); }
+    const blob = await res.blob();
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = `TAXES_MASTER_${new Date().toISOString().slice(0,10)}.xlsx`;
+    a.click();
+    URL.revokeObjectURL(url);
+  } catch (err) {
+    alert('Export failed: ' + err.message);
+  } finally {
+    btn.textContent = '↓ Export Excel';
+    btn.disabled = false;
+  }
+});
+
+// Apply nav active style on load
+document.querySelector('[data-section="upload"]').classList.add('bg-blue-700', 'text-white');
+</script>
+</body>
+</html>

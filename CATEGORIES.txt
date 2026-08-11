@@ -1,0 +1,262 @@
+
+Interest: Interest and bank charges
+Bank Fee: Interest and bank charges
+Overdraft: Interest and bank charges
+
+BOOKOOCOFFEE: Office expenses
+PISHOP: Office expenses
+IKEA: Office expenses
+DOLLAR TREE: Office expenses
+BEST BUY: Office expenses
+Amazon.ca:  Office expenses
+AMZN Mktp: Office expenses
+TEMU.COM: Office expenses
+WONDER PENS: Office expenses
+Office Supplies: Office expenses
+Staples: Office expenses
+DOLLARAMA: Office expenses
+
+URBANE CYCLI: Vehicle expenses
+SWEET PETE: Vehicle expenses
+ULTRAMAR: Vehicle expenses
+Gas: Vehicle expenses
+Petro Canada: Vehicle expenses
+Shell: Vehicle expenses
+ESSO: Vehicle expenses
+PETRO-CANADA: Vehicle expenses
+PIONEER: Vehicle expenses
+SHERWOOD CO-OP: Vehicle expenses
+
+Auto Insurance: Insurance
+Home Insurance: Insurance
+ALLIANZ GLOBAL ASSISTANCE: Insurace
+SGI CANADA: Insurance
+
+Google Ads: Advertising
+Facebook Ads: Advertising
+
+CANADIAN TIRE: Maintenance and repairs
+THE HOME DEPOT: Maintenance and repairs
+Home Repair: Maintenance and repairs
+Plumbing: Maintenance and repairs
+ABSOLUTE DRAINING AND PLU: Maintenance and repairs
+HOME HARDWARE: Maintenance and repairs
+CONVERTIBLE HEATING: Maintenance and repairs
+DOWNTOWN LUMBER & BUILDIN: Maintenance and repairs
+DUPONT HEATING AND AIR: Maintenance and repairs
+
+Municipal Tax: Property taxes
+
+CRAFT BEER MARKET: Meals and entertainment
+STARBUCKS COFFEE: Meals and entertainment
+REVOLVER COFFEE: Meals and entertainment
+PROPELLER COFFEE: Meals and entertainment
+HALE COFFEE: Meals and entertainment
+FOUND COFFEE: Meals and entertainment
+SP PIRATES OF COFFEE: Meals and entertainment
+33 1/3 COFFEE ROASTER: Meals and entertainment
+AM COFFEE STUDIO: Meals and entertainment
+PALMER COFFEE: Meals and entertainment
+MANIC COFFEE: Meals and entertainment
+PAUSE COFFEE: Meals and entertainment
+Kaffeeothek Salzburg: Meals and entertainment
+CRAVE COFFEE HOUSE: Meals and entertainment
+13TH AVE COFFEE: Meals and entertainment
+Yogen Fruz: Meals and entertainment
+WALLACE ESP: Meals and entertainment
+QUIZNOS: Meals and entertainment 
+PIRI-PIRI: Meals and entertainment 
+PIZZA: Meals and entertainment
+PIZZERIA: Meals and entertainment
+PEPPERS FOOD: Meals and entertainment
+PARIS BAKERY: Meals and entertainment
+PARALLEL: Meals and entertainment
+OFF THE TRACKS: Meals and entertainment
+LORICULLEN.COM: Meals and entertainment
+JUGO JUICE: Meals and entertainment
+CHRONIC TACOS: Meals and entertainment
+DDNORTHOFBROOKLYNP: Meals and entertainment
+MILESTONES: Meals and entertainment
+LONDON ALE HOUSE: Meals and entertainment
+GRANVILLE ISLAND KEG: Meals and entertainment
+GUAC MEXI GRILL: Meals and entertainment
+ED'S REAL SCOOP: Meals and entertainment
+EGG CLUB: Meals and entertainment
+EL GRITO MEXICANO: Meals and entertainment
+DOMINO'S PIZZA: Meals and entertainment
+DUFFYS TAVERN: Meals and entertainment
+DAIRY QUEEN: Meals and entertainment
+CINEPLEX: Meals and entertainment
+CHIPOTLE: Meals and entertainment
+BURGER KING: Meals and entertainment
+BURRITO BOYZ: Meals and entertainment
+CASINO NEW BRUNSWICK: Meals and entertainment
+BRIOCHE: Meals and entertainment
+BOBBY O BRIENS: Meals and entertainment
+BIG WAY HOT POT: Meals and entertainment
+BARBURRITO: Meals and entertainment
+7-ELEVEN: Meals and entertainment
+LOCOMOTIVE ESPRESSO: Meals and entertainment
+MARTIN ESPRESSO BAR: Meals and entertainment
+MERCURY ESPRESSO BAR: Meals and entertainment
+NAKED BEAN ESPRESSO BAR: Meals and entertainment
+BAR NEON: Meals and entertainment
+PROPELLER: Meals and entertainment
+THE COMMON: Meals and entertainment
+THE EVERYDAY KITCHEN: Meals and entertainment
+WEIRD HARBOUR: Meals and entertainment
+TACO BELL: Meals and entertainment
+THE CURE KITCHEN: Meals and entertainment
+TIM HORTON: Meals and entertainment
+Gus Tacos: Meals and entertainment
+Leopolds Tavern: Meals and entertainment
+Three Horses: Meals and entertainment
+Restaurant: Meals and entertainment
+WOK BOX: Meals and entertainment
+AW: Meals and entertainment
+A&W: Meals and entertainment
+A & W: Meals and entertainment
+Subway: Meals and entertainment
+TIM HORTONS: Meals and entertainment
+STARBUCKS: Meals and entertainment
+WALLACE ESPRESSO: Meals and entertainment
+MCDONALD: Meals and entertainment
+BOOSTER JUICE: Meals and entertainment
+BOSTON PIZZA: Meals and entertainment
+NETFLIX: Meals and entertainment
+LAZY LADS:  Meals and entertainment
+HALE COFFEE COMPANY INC.: Meals and entertainment
+COFFEE: Meals and entertainment
+HEY HAPPY COFFEE: Meals and entertainment
+KRC COFFEE: Meals and entertainment
+PRET A MANGER: Meals and entertainment
+ARABICA: Meals and entertainment
+STEEP STREET COFFEE HOUSE: Meals and entertainment
+AIR CANADA ON BOARD CA: Meals and entertainment
+ALI BABA: Meals and entertainment
+AC ROUGE ON BOARD CAFE: Meals and entertainment
+CAFE: Meals and entertainment
+Dark Horse: Meals and entertainment
+DEPARTURE BULA BISTRO: Meals and entertainment
+ALIBABA: Meals and entertainment
+
+Paper: Supplies
+Printer Ink: Supplies
+Startup Fee: Business start-up costs
+Prepaid Rent: Prepaid expenses
+
+
+PRESTO: Travel expenses
+NATLCAR: Travel expenses
+LYFT: Travel expenses
+FERRIE: Travel expenses
+COMPASS ACCOUNT: Travel expenses
+CAPITAL CAB: Travel expenses
+Tor-Parking Violation: Travel expenses
+YYZ_Relay: Travel expenses
+YYZ Relay: Travel expenses
+economybookings: Travel expenses
+Flight: Travel expenses
+AIR CAN: Travel expenses
+AIR CANADA: Travel expenses
+UPEXPRESS.COM: Travel expenses
+SHELL: Travel expenses
+MR. LUBE: Travel expenses
+ONROUTE: Travel expenses
+SOUTHEASTERN: Travel expenses
+FOUR SEASNS HOTEL: Travel expenses
+TFL TRAVEL: Travel expenses
+CITY OF REGINA TRANSIT: Travel
+Taxi: Travel expenses
+Parking: Travel expenses
+COMMUNAUTO: Travel expenses
+COMPASS VENDING: Travel expenses
+DELTA REGINA: Travel expenses
+
+Depreciation: Capital cost allowance
+Conference: Convention expenses
+SEO Services: Marketing
+Website Hosting: Marketing
+Office Rent: Rent
+Cleaning: Operating expenses
+Shipping: Shipping
+Canada Post: Shipping
+FedEx: Shipping
+UPS: Shipping
+Amazon.ca Prime Member: Shipping
+
+TD MORTGAGE: Mortgage
+TD Ins/TD Assur  INS: Insurance
+SAFEWAY #4891: Mum's Meds
+INSURANCE: Insurance
+APPLE.COM/BILL: Insurance
+INTEREST: Interest and bank charges
+
+HOSTINGER: Advertising
+WWW.GETNOMAD.APP: Communication
+BELL1: Internet
+EBOX: Internet
+DOTEASY: Advertising
+FREEDOM MOBILE: Phone
+APPLE STORE: Communication
+
+MUTTONHEAD: Clothing
+MARK'S STORE: Clothing
+LEVI CANADA: Clothing
+HUDSON'S BAY: Clothing
+A One Clothing: Clothing
+URBAN PLANET: Clothing
+WAL-MART: Clothing
+VALUE VILLAGE: Clothing
+WINNERS: Clothing
+OLDNAVY.COM: Clothing
+GAP.COM: Clothing
+Dr Martens: Clothing
+BANANAREPUBLIC.COM: Clothing
+SUGU WORLD: Business tax, fees, licences and dues
+BANDHELPER: Business tax, fees, licences and dues
+CIVIL AVIATION AUTHORITY: Business tax, fees, licences and dues
+
+TOR HYD ELEC: Utilities
+TOR UTILITY: Utilities
+
+NORTNMCMULLN: Tax Prep
+CRA : CRA Tax Payments
+CANADA           TXD: CRA Tax Payments
+
+ADOBE: Software
+OPENAI: Software
+REALVNC: Software
+REMOVE-BACKGROUND.COM: Software
+
+TORONTO TAX: Property Taxes
+GOOGLE: Software
+PAY PAL: Paypal
+Amazon Channels: Amazon Channels
+
+LONDON DRUGS: Photography equiptment
+GRAINATION: Photography equiptment
+CAMERA: Photography equiptment
+DJI Drones: Photography equiptment
+Henrys: Photography equiptment
+Vistek: Photography equiptment
+LOMOGRAPHY: Photography equiptment
+
+
+CANADA COMPUTER: Computer Equipment
+CGHLI           LOAN: Gov Loan Repayment??
+CHATHAM PHARMACY: Health??
+
+Financeit       LOAN: SHORTTERMLOAN??
+
+LONG & MCQUADE: Musical Equipment
+SERVICE CANADA    _F: Service Canada Fees??
+
+FEE : Interest and bank charges
+FEES : Interest and bank charges
+Accountant: Accounting and legal fees
+Lawyer: Accounting and legal fees
+Bad Debt: Bad debts
+Business License: Business tax, fees, licences and dues
+Chamber of Commerce: Business tax, fees, licences and dues
+Consulting: Management and administration fees
